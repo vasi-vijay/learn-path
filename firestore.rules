@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerified() && (request.auth.token.email == 'vasivenkatavijay@gmail.com' || request.auth.token.email == 'made.by.vijayy@gmail.com');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin();
+      
+      // User can create their profile but CANNOT self-grant admin or Pro status unless admin
+      allow create: if isValidId(userId) && (isOwner(userId) || isAdmin()) 
+        && (!('role' in request.resource.data) || request.resource.data.role == 'user' || isAdmin())
+        && (!('isProUser' in request.resource.data) || request.resource.data.isProUser == false || isAdmin());
+
+      // User can update profile fields but CANNOT alter roles, pro status, or payments unless admin
+      allow update: if isValidId(userId) && (
+        (isOwner(userId) && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'isProUser', 'proPaymentId', 'proPlan', 'proUnlockedAt'])
+          || (
+            (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) || request.resource.data.role == resource.data.role)
+            && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['isProUser']) || request.resource.data.isProUser == resource.data.isProUser)
+          )
+        ))
+        || isAdmin()
+      );
+
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // Progress Collection: Tracks problem solving, bookmarks, notes, and coding profiles
+    match /progress/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow update: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // Orders Collection: Managed exclusively by server backend & admin
+    match /orders/{orderId} {
+      allow get: if isValidId(orderId) && (isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid));
+      allow list: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Audit Logs: Strictly admin & server accessible
+    match /audit_logs/{logId} {
+      allow get, list: if isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Contact Messages: Public submission with validation, admin-only read
+    match /messages/{msgId} {
+      allow get, list: if isAdmin();
+      allow create: if isValidId(msgId)
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 128
+        && request.resource.data.email is string && request.resource.data.email.size() > 0 && request.resource.data.email.size() <= 256
+        && request.resource.data.message is string && request.resource.data.message.size() >= 10 && request.resource.data.message.size() <= 2048;
+      allow update, delete: if isAdmin();
+    }
+  }
+}

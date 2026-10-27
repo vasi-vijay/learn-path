@@ -1,0 +1,107 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account profile and learning progress data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "photoURL": { "type": "string", "maxLength": 512 },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "isProUser": { "type": "boolean" },
+        "proPlan": { "type": "string", "enum": ["free", "pro", "lifetime"] },
+        "proPaymentId": { "type": "string", "maxLength": 128 },
+        "proUnlockedAt": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["uid", "email"]
+    },
+    "PaymentOrder": {
+      "title": "PaymentOrder",
+      "description": "Razorpay internal order records and payment lifecycle states",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "format": "email", "maxLength": 256 },
+        "razorpayOrderId": { "type": "string", "maxLength": 128 },
+        "razorpayPaymentId": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "enum": ["INR"] },
+        "status": { "type": "string", "enum": ["CREATED", "PENDING", "PAID", "FAILED", "REFUNDED"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["orderId", "userId", "amount", "currency", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable security and administrative action audit trail",
+      "type": "object",
+      "properties": {
+        "action": { "type": "string", "maxLength": 128 },
+        "actorUid": { "type": "string", "maxLength": 128 },
+        "actorEmail": { "type": "string", "format": "email", "maxLength": 256 },
+        "ip": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "maxLength": 32 },
+        "timestamp": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["action", "actorEmail", "timestamp"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Contact form submissions delivered to administrator",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 256 },
+        "message": { "type": "string", "maxLength": 2048 },
+        "targetEmail": { "type": "string", "maxLength": 256 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["name", "email", "message"]
+    },
+    "UserProgress": {
+      "title": "UserProgress",
+      "description": "User problem solving progress, bookmarks, notes, and synchronized coding profiles",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "codingProfiles": { "type": "object" },
+        "solvedMap": { "type": "object" },
+        "totalSolved": { "type": "number" },
+        "bookmarksMap": { "type": "object" },
+        "notesMap": { "type": "object" },
+        "customDataMap": { "type": "object" },
+        "activityDates": { "type": "object" },
+        "lastActiveAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["uid"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user profiles with role-based access"
+    },
+    "/progress/{userId}": {
+      "schema": { "$ref": "#/entities/UserProgress" },
+      "description": "User progress data, question bookmarks, notes, and third-party coding platform stats"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/PaymentOrder" },
+      "description": "Razorpay payment orders tied to users"
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Privileged audit events accessible only by admin and server"
+    },
+    "/messages/{msgId}": {
+      "schema": { "$ref": "#/entities/ContactMessage" },
+      "description": "Public contact messages readable only by admin"
+    }
+  }
+}

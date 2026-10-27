@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Made By Vijay | Tech Jobs, Interview Experiences &amp; Preparation Resources</title>
+    <meta name="description" content="Made By Vijay is your go-to platform for fresh tech opportunities and career preparation. Discover curated DSA sheets, 45+ company interview question sets, 20 essential coding patterns, role-wise roadmaps, SQL sheets, system design, and resume templates." />
+    <meta property="og:title" content="Made By Vijay | Tech Jobs, Interview Experiences &amp; Preparation Resources" />
+    <meta property="og:description" content="Made By Vijay is your go-to platform for fresh tech opportunities and career preparation. Discover curated DSA sheets, 45+ company interview question sets, 20 essential coding patterns, role-wise roadmaps, SQL sheets, system design, and resume templates." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#07090e" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/png" href="/made_by_vijay_logo.png" />
+    <link rel="apple-touch-icon" href="/made_by_vijay_logo.png" />
+    <meta property="og:image" content="/made_by_vijay_logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Josefin+Sans:wght@400;500;600;700&family=Lexend:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/vendor/bundle.css">
+    <script>
+      (function() {
+        try {
+          var m = localStorage.getItem('LearnPath_theme_mode') || localStorage.getItem('LearnPath_theme') || localStorage.getItem('theme') || 'auto';
+          var isDark = m === 'dark' || (m === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+            document.documentElement.style.colorScheme = 'dark';
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.documentElement.setAttribute('data-theme-mode', m);
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+            document.documentElement.style.colorScheme = 'light';
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.setAttribute('data-theme-mode', m);
+          }
+        } catch (e) {}
+
+        // Load reverse-engineered bundle dynamically so Vite does not attempt compile-time pre-transform
+        var s = document.createElement('script');
+        s.type = 'module';
+        s.src = '/vendor/bundle.js';
+        document.head.appendChild(s);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="admin-portal-root"></div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

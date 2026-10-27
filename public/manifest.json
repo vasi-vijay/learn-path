@@ -1,0 +1,23 @@
+{
+  "name": "Made By Vijay",
+  "short_name": "MadeByVijay",
+  "description": "Tech Jobs, Interview Experiences & Preparation Resources by Made By Vijay",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090e",
+  "theme_color": "#07090e",
+  "icons": [
+    {
+      "src": "/made_by_vijay_logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/made_by_vijay_logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

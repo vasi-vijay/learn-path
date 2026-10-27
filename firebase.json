@@ -1,0 +1,8 @@
+{
+  "firestore": {
+    "databaseId": "ai-studio-08ed8d06-1a88-41fd-9a21-86f1b17bb938",
+    "rules": "firestore.rules",
+    "edition": "ENTERPRISE",
+    "dataAccessMode": "FIRESTORE_NATIVE"
+  }
+}
